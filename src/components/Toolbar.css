@@ -1,0 +1,118 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: white;
+  position: relative;
+  z-index: 100;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+}
+
+.toolbar-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.toolbar-subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.toolbar-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-btn {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.toolbar-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.toolbar-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.toolbar-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.toolbar-btn-primary {
+  background: rgba(255, 255, 255, 0.95);
+  color: #667eea;
+  border: none;
+  font-weight: 600;
+}
+
+.toolbar-btn-primary:hover {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 0 4px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .toolbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px;
+  }
+  
+  .toolbar-left {
+    flex: 1 1 100%;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .toolbar-subtitle {
+    display: none;
+  }
+  
+  .toolbar-center,
+  .toolbar-right {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .toolbar-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
