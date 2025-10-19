@@ -24,7 +24,11 @@ export function detectDropZone(draggedTask, targetTask, mousePos) {
     mousePos.x >= target.x - size.width * 0.2 && 
     mousePos.x <= target.x + size.width * 1.2;
   
-  if (isBelow && isInHorizontalRange) {
+  // 增加更严格的条件：必须在下方的特定区域内
+  const isInChildDropZone = isBelow && isInHorizontalRange && 
+    mousePos.y <= target.y + size.height + 80; // 限制在父任务下方80像素内
+  
+  if (isInChildDropZone) {
     // 防止循环依赖：子任务不能成为其父任务的父任务
     if (targetTask.parentId === draggedTask.id) {
       return { type: 'MOVE' };
@@ -122,8 +126,8 @@ export function isOverlapping(pos1, pos2, threshold = 50) {
  */
 export function calculateChildPosition(parentTask, childIndex = 0) {
   return {
-    x: parentTask.position.x + parentTask.size.width + 10, // 父任务右边
-    y: parentTask.position.y + parentTask.size.height + 10 + childIndex * 50 // 父任务下方
+    x: parentTask.position.x + parentTask.size.width * 0.3, // 父任务中间偏右
+    y: parentTask.position.y + parentTask.size.height + 15 + childIndex * 60 // 父任务下方，间距稍大
   };
 }
 
@@ -133,8 +137,8 @@ export function calculateChildPosition(parentTask, childIndex = 0) {
 export function calculateCategoryBounds(tasks) {
   if (tasks.length === 0) return null;
   
-  const padding = 20;
-  const headerHeight = 30;
+  const padding = 40;
+  const headerHeight = 50;
   
   const minX = Math.min(...tasks.map(t => t.position.x)) - padding;
   const minY = Math.min(...tasks.map(t => t.position.y)) - headerHeight - padding;

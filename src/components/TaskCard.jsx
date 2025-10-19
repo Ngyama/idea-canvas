@@ -11,7 +11,9 @@ const TaskCard = ({
   isPreview = false,
   opacity = 1,
   categoryDragOffset = { x: 0, y: 0 },
-  isInDraggedCategory = false
+  isInDraggedCategory = false,
+  isSelected = false,
+  onClick
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(task.content);
@@ -55,11 +57,31 @@ const TaskCard = ({
       input.style.fontSize = '14px';
       input.style.border = 'none';
       input.style.borderRadius = '6px';
-      input.style.outline = '3px solid #4CAF50';
       input.style.resize = 'none';
       input.style.fontFamily = 'inherit';
-      input.style.backgroundColor = task.style.bgColor;
-      input.style.color = task.style.textColor;
+      
+      // 根据任务状态确定输入框颜色
+      let inputBgColor, inputTextColor, inputBorderColor;
+      if (task.childrenIds && task.childrenIds.length > 0) {
+        // 父任务 - 使用天蓝色系
+        inputBgColor = '#E1F5FE';
+        inputTextColor = '#0277BD';
+        inputBorderColor = '#0277BD';
+      } else if (task.parentId) {
+        // 子任务 - 使用浅绿色系
+        inputBgColor = '#F1F8E9';
+        inputTextColor = '#388E3C';
+        inputBorderColor = '#388E3C';
+      } else {
+        // 自由态任务 - 使用粉色系
+        inputBgColor = '#FFF0F5';
+        inputTextColor = '#C2185B';
+        inputBorderColor = '#F8BBD9';
+      }
+      
+      input.style.backgroundColor = inputBgColor;
+      input.style.color = inputTextColor;
+      input.style.outline = `3px solid ${inputBorderColor}`;
       input.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
       input.style.zIndex = '10000';
       input.style.boxSizing = 'border-box';
@@ -116,6 +138,17 @@ const TaskCard = ({
     }
   }, [isEditing, editContent, task.id, task.content, onContentChange]);
   
+  // 点击事件处理
+  const handleClick = (e) => {
+    try {
+      if (!isPreview && onClick) {
+        onClick(task.id, e.evt.ctrlKey || e.evt.metaKey);
+      }
+    } catch (error) {
+      console.error('Error in handleClick:', error);
+    }
+  };
+
   // 右键删除
   const handleContextMenu = (e) => {
     try {
@@ -141,6 +174,7 @@ const TaskCard = ({
         onDragStart={onDragStart}
         onDragMove={onDragMove}
         onDragEnd={onDragEnd}
+        onClick={handleClick}
         onDblClick={handleDoubleClick}
         onTap={handleDoubleClick}
         onContextMenu={handleContextMenu}
@@ -148,16 +182,44 @@ const TaskCard = ({
       >
         {/* 背景 */}
         <Rect
-          width={task.size?.width || 120}
-          height={task.size?.height || 40}
-          fill={task.childrenIds && task.childrenIds.length > 0 ? '#E3F2FD' : (task.style?.bgColor || '#4CAF50')}
-          stroke={task.childrenIds && task.childrenIds.length > 0 ? '#1976D2' : (task.style?.borderColor || '#388E3C')}
-          strokeWidth={task.childrenIds && task.childrenIds.length > 0 ? 3 : 2}
-          cornerRadius={4}
-          shadowColor="black"
-          shadowBlur={isPreview ? 15 : 3}
-          shadowOpacity={isPreview ? 0.3 : 0.15}
-          shadowOffset={{ x: 0, y: 1 }}
+          width={task.size?.width || 240}
+          height={task.size?.height || 50}
+          fill={(() => {
+            // 根据任务状态确定颜色
+            if (task.childrenIds && task.childrenIds.length > 0) {
+              // 父任务 - 使用天蓝色系
+              return '#E1F5FE';
+            } else if (task.parentId) {
+              // 子任务 - 使用浅绿色系
+              return '#F1F8E9';
+            } else {
+              // 自由态任务 - 使用粉色系
+              return '#FFF0F5';
+            }
+          })()}
+          stroke={(() => {
+            // 如果被选中，使用选中状态的边框颜色
+            if (isSelected) {
+              return '#FF5722';
+            }
+            // 根据任务状态确定边框颜色
+            if (task.childrenIds && task.childrenIds.length > 0) {
+              // 父任务 - 使用天蓝色系
+              return '#0277BD';
+            } else if (task.parentId) {
+              // 子任务 - 使用浅绿色系
+              return '#388E3C';
+            } else {
+              // 自由态任务 - 使用粉色系
+              return '#F8BBD9';
+            }
+          })()}
+          strokeWidth={isSelected ? 4 : (task.childrenIds && task.childrenIds.length > 0 ? 3 : 2)}
+          cornerRadius={8}
+          shadowColor="rgba(0,0,0,0.1)"
+          shadowBlur={isPreview ? 15 : 4}
+          shadowOpacity={isPreview ? 0.3 : 0.2}
+          shadowOffset={{ x: 0, y: 2 }}
         />
         
         {/* 文本 */}
@@ -166,10 +228,22 @@ const TaskCard = ({
             text={task.content || '新任务'}
             x={6}
             y={6}
-            width={(task.size?.width || 120) - 12}
-            height={(task.size?.height || 40) - 12}
+            width={(task.size?.width || 240) - 12}
+            height={(task.size?.height || 50) - 12}
             fontSize={12}
-            fill={task.childrenIds && task.childrenIds.length > 0 ? '#1976D2' : (task.style?.textColor || '#ffffff')}
+            fill={(() => {
+              // 根据任务状态确定文字颜色
+              if (task.childrenIds && task.childrenIds.length > 0) {
+                // 父任务 - 使用天蓝色系
+                return '#0277BD';
+              } else if (task.parentId) {
+                // 子任务 - 使用浅绿色系
+                return '#388E3C';
+              } else {
+                // 自由态任务 - 使用粉色系
+                return '#C2185B';
+              }
+            })()}
             align="left"
             verticalAlign="middle"
             wrap="word"

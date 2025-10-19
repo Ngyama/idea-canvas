@@ -12,20 +12,24 @@ const useCanvasStore = create((set, get) => ({
   // 创建任务
   createTask: (position, content = '新任务') => {
     const id = nanoid();
+    
+    // 自由态任务的颜色方案（默认）
+    const freeTaskStyle = {
+      bgColor: '#FFF0F5',
+      textColor: '#C2185B',
+      borderColor: '#F8BBD9'
+    };
+    
     const task = {
       id,
       content,
       position: { x: position.x, y: position.y },
-      size: { width: 120, height: 40 },
+      size: { width: 240, height: 50 },
       type: 'task',
       parentId: null,
       categoryId: null,
       childrenIds: [],
-      style: {
-        bgColor: '#4CAF50',
-        textColor: '#ffffff',
-        borderColor: '#388E3C'
-      }
+      style: freeTaskStyle
     };
     
     set((state) => ({
@@ -213,12 +217,12 @@ const useCanvasStore = create((set, get) => ({
     set((state) => {
       const tasks = taskIds.map(tid => state.tasks[tid]);
       
-      // 计算分类的边界
+      // 计算分类的边界（增大边距）
       const positions = tasks.map(t => t.position);
-      const minX = Math.min(...positions.map(p => p.x)) - 20;
-      const minY = Math.min(...positions.map(p => p.y)) - 50;
-      const maxX = Math.max(...tasks.map(t => t.position.x + t.size.width)) + 20;
-      const maxY = Math.max(...tasks.map(t => t.position.y + t.size.height)) + 20;
+      const minX = Math.min(...positions.map(p => p.x)) - 40;
+      const minY = Math.min(...positions.map(p => p.y)) - 70;
+      const maxX = Math.max(...tasks.map(t => t.position.x + t.size.width)) + 40;
+      const maxY = Math.max(...tasks.map(t => t.position.y + t.size.height)) + 40;
       
       const category = {
         id,

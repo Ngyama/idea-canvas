@@ -4,9 +4,9 @@
   justify-content: space-between;
   height: 60px;
   padding: 0 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #FFB3E6 0%, #87CEEB 50%, #FFF8DC 100%);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  color: white;
+  color: #333;
   position: relative;
   z-index: 100;
 }
@@ -42,9 +42,9 @@
 
 .toolbar-btn {
   padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.7);
+  color: #333;
+  border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
@@ -54,7 +54,7 @@
 }
 
 .toolbar-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.9);
   transform: translateY(-1px);
 }
 
@@ -69,7 +69,7 @@
 
 .toolbar-btn-primary {
   background: rgba(255, 255, 255, 0.95);
-  color: #667eea;
+  color: #E91E63;
   border: none;
   font-weight: 600;
 }
@@ -82,7 +82,7 @@
 .toolbar-divider {
   width: 1px;
   height: 24px;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.6);
   margin: 0 4px;
 }
 
